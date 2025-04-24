@@ -1,0 +1,18 @@
+name: Restrict Merge to QA
+
+on:
+  pull_request:
+    branches:
+      - qa
+
+jobs:
+  validate-source-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if source branch is not feature/*
+        run: |
+          echo "Source Branch: ${{github.head_ref}}"
+          if [[ ! "${{ github.head_ref }}" =~ ^feature/ ]]; then
+            echo "Only 'feature/*' branches can be merged into QA."
+            exit 1
+          fi
